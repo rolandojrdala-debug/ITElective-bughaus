@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="dash">
+    <h1 id="greeting">Signed in</h1>
+    <p id="details"></p>
+    <button class="submit" id="logout" type="button">Sign out</button>
+  </main>
+  <script>
+    fetch("/api/me").then(r => r.ok ? r.json() : Promise.reject()).then(u => {
+      document.getElementById("greeting").textContent = "Hello, " + u.name;
+      document.getElementById("details").textContent = u.email + " · member since " + u.created_at.slice(0, 10);
+    }).catch(() => { window.location.href = "/"; });
+
+    document.getElementById("logout").addEventListener("click", async () => {
+      await fetch("/api/logout", { method: "POST" });
+      window.location.href = "/";
+    });
+  </script>
+</body>
+</html>
